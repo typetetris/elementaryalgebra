@@ -1,0 +1,14 @@
+author: Eric Wolf
+version: 0.0.0.1
+cabal-version: >=2
+build-type: Simple
+name: aufgaben
+
+
+executable aufgaben
+  hs-source-dirs: .
+  main-is: aufgaben.hs
+  build-depends:
+    base,
+    QuickCheck,
+    text
