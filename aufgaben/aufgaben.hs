@@ -27,17 +27,24 @@ instance Show Problem where
 instance Arbitrary Problem where
   arbitrary = do
     op <- arbitrary
-    f <- case op of
-       Add -> choose (1::Int, 99::Int)
-       Mul -> choose (1::Int, 10::Int)
-       Div -> choose (1::Int, 99::Int)
-       Sub -> choose (1::Int, 99::Int)
-    g <- case op of
-       Add -> choose (1::Int, 99::Int)
-       Mul -> choose (1::Int, 10::Int)
-       Div -> choose (1::Int, 10::Int)
-       Sub -> choose (1::Int, f)
-    return (Problem f op g)
+    case op of
+      Add -> do
+        f <- choose (1::Int, 99::Int)
+        g <- choose (1::Int, 99::Int)
+        return (Problem f op g)
+      Sub -> do
+        f <- choose (1::Int, 99::Int)
+        g <- choose (1::Int, f)
+        return (Problem f op g)
+      Mul -> do
+        f <- choose (1::Int, 10::Int)
+        g <- choose (1::Int, 10::Int)
+        return (Problem f op g)
+      Div -> do
+        f <- choose (1::Int, 10::Int)
+        g <- choose (1::Int, 10::Int)
+        h <- choose (0::Int, g-1)
+        return (Problem (f*g+h) op g)
 
 showProblemsI :: Int -> [Problem] -> Builder -> Text
 showProblemsI _     [] b = toLazyText (b <> fromString "\\\\\n")
